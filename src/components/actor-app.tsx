@@ -1,10 +1,9 @@
-import type { CSSProperties, FormEvent } from "react";
+import type { CSSProperties, FormEvent, ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 
 import { BlueskyProfile } from "~/components/bluesky-profile";
 import { IdentityCard } from "~/components/identity-card";
 import { MasonryGrid } from "~/components/masonry-grid";
-import { ProfileSection } from "~/components/profile-section";
 import { ProfileSections } from "~/components/profile-sections";
 import { resolveMiniDoc } from "~/lib/atproto/mini-doc";
 import { hashString } from "~/lib/did-random";
@@ -17,9 +16,15 @@ import type { BlueskyProfile as BlueskyProfileData } from "~/lib/providers/blues
 import type { BlueskyActorSearchResult } from "~/lib/providers/bluesky-search";
 import type { AtprotoMiniIdentity } from "~/lib/atproto/mini-doc";
 
+type AppRoute =
+  | { type: "home" }
+  | { identifier: string; type: "profile" }
+  | { type: "not-found" };
+
 export function ActorApp() {
   const pathname = useBrowserPathname();
-  const identifier = getPathIdentifier(pathname);
+  const route = getAppRoute(pathname);
+  const identifier = route.type === "profile" ? route.identifier : null;
   const [identity, setIdentity] = useState<AtprotoMiniIdentity | null>(null);
   const [profile, setProfile] = useState<BlueskyProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -74,19 +79,28 @@ export function ActorApp() {
   }, [identifier]);
 
   if (pathname === null) {
-    return <LoadingPage />;
+    return <LoadingPage seed="haunt.at" />;
   }
 
-  if (!identifier) {
+  if (route.type === "home") {
     return <Home />;
   }
 
+  if (route.type === "not-found") {
+    return <NotFoundPage />;
+  }
+
   if (isLoading) {
-    return <LoadingPage />;
+    return <LoadingPage seed={route.identifier} />;
   }
 
   if (error || !identity) {
-    return <ErrorPage message={error ?? "Could not resolve this profile."} />;
+    return (
+      <ErrorPage
+        message={error ?? "Could not resolve this profile."}
+        seed={route.identifier}
+      />
+    );
   }
 
   const theme = getDidTheme(identity.did).css;
@@ -138,13 +152,17 @@ function useBrowserPathname(): string | null {
   return pathname;
 }
 
-function getPathIdentifier(pathname: string | null): string | null {
+function getAppRoute(pathname: string | null): AppRoute {
   if (!pathname || pathname === "/") {
-    return null;
+    return { type: "home" };
   }
 
   const path = pathname.replace(/^\/+|\/+$/g, "");
-  return path ? decodeURIComponent(path) : null;
+  if (!path || path.includes("/")) {
+    return { type: "not-found" };
+  }
+
+  return { identifier: decodeURIComponent(path), type: "profile" };
 }
 
 function Home() {
@@ -402,26 +420,77 @@ async function loadActors({
   }
 }
 
-function LoadingPage() {
+type StatePageProps = {
+  children?: ReactNode;
+  description: string;
+  label: string;
+  seed: string;
+  title: string;
+};
+
+function StatePage({
+  label,
+  title,
+  description,
+  seed,
+  children,
+}: StatePageProps) {
   return (
-    <main className="min-h-screen p-4 sm:p-8">
-      <div className="mx-auto max-w-2xl">
-        <ProfileSection title="Resolving identity">
-          <p className="text-sm">Scanning the Atmosphere…</p>
-        </ProfileSection>
+    <main className="state-page min-h-screen p-4 sm:p-8">
+      <div className="state-content mx-auto max-w-2xl">
+        <a className="state-masthead" href="/">
+          haunt.at
+        </a>
+
+        <section className="state-reading" aria-labelledby="state-title">
+          <HauntSigil seed={seed} />
+          <p className="state-label">{label}</p>
+          <h1 id="state-title">{title}</h1>
+          <p className="state-description">{description}</p>
+          {children}
+        </section>
       </div>
     </main>
   );
 }
 
-function ErrorPage({ message }: { message: string }) {
+function LoadingPage({ seed }: { seed: string }) {
   return (
-    <main className="min-h-screen p-4 sm:p-8">
-      <div className="mx-auto max-w-2xl">
-        <ProfileSection title="Could not resolve profile">
-          <p className="text-sm">{message}</p>
-        </ProfileSection>
-      </div>
-    </main>
+    <StatePage
+      label="resolving"
+      title="Finding a presence"
+      description="Following the public record to its source."
+      seed={seed}
+    />
+  );
+}
+
+function ErrorPage({ message, seed }: { message: string; seed: string }) {
+  return (
+    <StatePage
+      label="unresolved"
+      title="No presence found"
+      description={message}
+      seed={seed}
+    >
+      <a className="state-action" href="/">
+        return to haunt
+      </a>
+    </StatePage>
+  );
+}
+
+function NotFoundPage() {
+  return (
+    <StatePage
+      label="lost path"
+      title="This path leads nowhere"
+      description="Haunt pages begin with a handle or DID."
+      seed="lost-path"
+    >
+      <a className="state-action" href="/">
+        return to haunt
+      </a>
+    </StatePage>
   );
 }

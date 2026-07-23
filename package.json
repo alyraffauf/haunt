@@ -4,9 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc --noEmit && vite build",
+    "build": "bun run generate:og && tsc --noEmit && vite build",
     "check": "eslint . && tsc --noEmit",
     "dev": "vite",
+    "generate:og": "bun scripts/generate-og-image.tsx",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "format:write": "prettier --write \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "lint": "eslint .",
@@ -20,6 +21,7 @@
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^20.19.43",
     "@types/react": "^19.2.17",
@@ -29,6 +31,7 @@
     "postcss": "^8.5.22",
     "prettier": "^3.9.6",
     "prettier-plugin-tailwindcss": "^0.6.14",
+    "satori": "^0.28.2",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.65.0",

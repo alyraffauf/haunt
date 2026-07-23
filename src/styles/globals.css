@@ -16,7 +16,8 @@ body {
   background-size: 108% 108%;
 }
 
-.home-page {
+.home-page,
+.state-page {
   background-color: #10090d;
   background-image:
     radial-gradient(circle at 16% 12%, #2b111d 0, transparent 36rem),
@@ -26,6 +27,65 @@ body {
 
 .home-content {
   padding-top: clamp(1.5rem, 4vw, 3rem);
+}
+
+.state-content {
+  padding-top: clamp(1.5rem, 4vw, 3rem);
+}
+
+.state-masthead {
+  color: color-mix(in srgb, currentColor 50%, transparent);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.state-masthead:focus-visible,
+.state-action:focus-visible {
+  outline: 2px solid #d4ae6b;
+  outline-offset: 3px;
+}
+
+.state-reading {
+  display: grid;
+  justify-items: center;
+  margin: clamp(7rem, 20vh, 13rem) auto 0;
+  max-width: 25rem;
+  text-align: center;
+}
+
+.state-reading .home-sigil {
+  height: clamp(8rem, 18vw, 10rem);
+  width: clamp(8rem, 18vw, 10rem);
+}
+
+.state-label {
+  color: color-mix(in srgb, currentColor 48%, transparent);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  margin-top: 0.875rem;
+  text-transform: uppercase;
+}
+
+.state-reading h1 {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+  margin-top: 1.5rem;
+}
+
+.state-description {
+  color: color-mix(in srgb, currentColor 60%, transparent);
+  margin-top: 0.75rem;
+}
+
+.state-action {
+  border-bottom: 1px solid color-mix(in srgb, #d4ae6b 70%, transparent);
+  color: #e8ddcc;
+  font-size: 0.875rem;
+  margin-top: 1.75rem;
+  padding-bottom: 0.15rem;
 }
 
 .home-index-label {
