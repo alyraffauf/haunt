@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+body {
+  background-color: #111;
+  color: #eee;
+  font-family: "Space Grotesk Variable", "Space Grotesk", sans-serif;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+}
+
+.profile-page {
+  background-color: var(--profile-background);
+  background-image: var(--profile-atmosphere);
+  background-attachment: fixed;
+  background-size: 108% 108%;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  align-items: start;
+  gap: 1.5rem;
+}
+
+.profile-grid-masonry {
+  grid-auto-rows: 0.5rem;
+}
+
+.profile-card {
+  background-color: var(--profile-card);
+  border-color: color-mix(in srgb, var(--profile-border) 58%, transparent);
+  border-radius: var(--profile-card-radius);
+  padding: clamp(1rem, 2vw, 1.25rem);
+}
+
+.profile-divider {
+  border-color: color-mix(in srgb, var(--profile-border) 44%, transparent);
+}
+
+.profile-link {
+  color: var(--profile-accent);
+  text-decoration-color: color-mix(
+    in srgb,
+    var(--profile-accent) 45%,
+    transparent
+  );
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+.profile-link:hover,
+.profile-link:focus-visible {
+  text-decoration-color: currentColor;
+}
+
+.profile-link:focus-visible,
+.profile-external-link:focus-visible {
+  outline: 2px solid var(--profile-accent);
+  outline-offset: 3px;
+}
+
+.bluesky-profile {
+  container-type: inline-size;
+}
+
+.profile-identity-header {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.profile-name {
+  font-size: 1.625rem;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+.profile-item-title {
+  font-size: 0.9375rem;
+  font-weight: 650;
+  line-height: 1.3;
+}
+
+.profile-copy {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.profile-secondary {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  opacity: 0.78;
+}
+
+.profile-metadata {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  opacity: 0.62;
+}
+
+@container (max-width: 21rem) {
+  .profile-identity-header {
+    grid-template-columns: 1fr;
+  }
+}
+
+@keyframes atmosphere-drift {
+  to {
+    background-position: 100% 100%;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .profile-page {
+    animation: atmosphere-drift 28s ease-in-out infinite alternate;
+  }
+}
