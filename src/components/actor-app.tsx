@@ -228,13 +228,14 @@ function Home() {
           <summary>how it works</summary>
           <div className="home-how-it-works-copy">
             <p>
-              Enter an AT Protocol handle. Haunt resolves it to a true name
-              (DID), then assembles its public traces from across the
+              Enter an Atmosphere handle. Haunt discovers its true name
+              (DID), then assembles its traces from across the
               Atmosphere.
             </p>
             <p>
-              A true name is stable. It determines a haunt&apos;s form: its
-              color, atmosphere, and geometry.
+              A demon's true name does not change. The pages in this compendium are 
+              generated deterministically from it. Every presence has a unique 
+              color, order, and sigil.
             </p>
           </div>
         </details>
