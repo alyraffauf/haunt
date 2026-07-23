@@ -229,10 +229,10 @@ function Home() {
           <div className="home-how-it-works-copy">
             <p>
               Enter an Atmosphere handle. Haunt discovers its true name (DID),
-              then assembles its traces from across the Compendium.
+              then assembles its haunt from traces across the Compendium.
             </p>
             <p>
-              A demon's true name does not change. The pages in this compendium
+              One's true name does not change. The pages in this compendium
               are generated deterministically from it. Every presence has a
               unique color, geometry, order, and sigil.
             </p>
