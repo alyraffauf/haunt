@@ -21,7 +21,7 @@ export async function searchBlueskyActors(
   });
   const response = await fetch(
     `${TYPEAHEAD_URL}/xrpc/app.bsky.actor.searchActorsTypeahead?${params}`,
-    { signal, headers: { "X-Client": "haunt" } },
+    { signal, headers: { "X-Client": "haunt.at" } },
   );
 
   if (!response.ok) {
