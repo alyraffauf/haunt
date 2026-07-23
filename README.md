@@ -1,6 +1,6 @@
-# Generic Website
+# haunt
 
-An atproto profile aggregator. Visit `/<handle>` or `/<did>` to see the records that a person has published across the Atmosphere.
+A haunted view of an atproto presence. Visit `/<handle>` or `/<did>` to see the records that a person has published across the Atmosphere.
 
 The app resolves identities through Slingshot, then fetches records directly from the person’s PDS in the browser.
 
