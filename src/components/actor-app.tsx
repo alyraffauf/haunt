@@ -228,17 +228,34 @@ function Home() {
           <summary>how it works</summary>
           <div className="home-how-it-works-copy">
             <p>
-              Enter an Atmosphere handle. Haunt discovers its true name
-              (DID), then assembles its traces from across the
-              Atmosphere.
+              Enter an Atmosphere handle. Haunt discovers its true name (DID),
+              then assembles its traces from across the Compendium.
             </p>
             <p>
-              A demon's true name does not change. The pages in this compendium are 
-              generated deterministically from it. Every presence has a unique 
-              color, order, and sigil.
+              A demon's true name does not change. The pages in this compendium
+              are generated deterministically from it. Every presence has a
+              unique color, geometry, order, and sigil.
             </p>
           </div>
         </details>
+
+        <footer className="home-footer">
+          <a
+            href="https://tangled.org/aly.codes/haunt"
+            target="_blank"
+            rel="noreferrer"
+          >
+            source
+          </a>
+          <span aria-hidden="true">·</span>
+          <a
+            href="https://bsky.app/profile/aly.codes"
+            target="_blank"
+            rel="noreferrer"
+          >
+            @aly.codes
+          </a>
+        </footer>
       </div>
     </main>
   );
