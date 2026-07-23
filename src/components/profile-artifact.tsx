@@ -20,7 +20,7 @@ export function ProfileArtifact({
     >
       {children}
       {source && (
-        <footer className="profile-divider profile-artifact-source border-t">
+        <footer className="profile-artifact-source">
           <a
             className="profile-source-link"
             href={source.href}

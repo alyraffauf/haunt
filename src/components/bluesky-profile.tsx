@@ -54,7 +54,7 @@ export function BlueskyProfile({
         </p>
       )}
 
-      <footer className="profile-divider mt-4 flex justify-end border-t pt-3">
+      <footer className="mt-5 flex justify-end">
         <a
           className="profile-source-link"
           href={`https://bsky.app/profile/${profileIdentifier}`}
