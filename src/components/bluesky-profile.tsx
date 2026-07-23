@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { HauntSigil } from "~/components/haunt-sigil";
 import type { BlueskyProfile } from "~/lib/providers/bluesky";
 
 type BlueskyProfileProps = {
@@ -43,28 +44,19 @@ export function BlueskyProfile({ did, handle, profile }: BlueskyProfileProps) {
             </p>
           )}
         </div>
+
+        <HauntSigil
+          className="profile-sigil"
+          color="var(--profile-accent)"
+          seed={did}
+        />
       </div>
 
-      <div className="mt-4">
-        {profile.description && (
-          <p className="profile-copy max-w-[42rem] whitespace-pre-wrap">
-            {profile.description}
-          </p>
-        )}
-
-        {/* {profile.website && (
-          <p className="mt-5">
-            <a
-              className="profile-link font-semibold"
-              href={profile.website}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {formatWebsiteLabel(profile.website)}
-            </a>
-          </p>
-        )} */}
-      </div>
+      {profile.description && (
+        <p className="profile-copy mt-5 whitespace-pre-wrap">
+          {profile.description}
+        </p>
+      )}
 
       <footer className="profile-divider mt-4 flex justify-end border-t pt-3">
         <a
@@ -78,13 +70,4 @@ export function BlueskyProfile({ did, handle, profile }: BlueskyProfileProps) {
       </footer>
     </section>
   );
-}
-
-function formatWebsiteLabel(website: string): string {
-  try {
-    const url = new URL(website);
-    return url.hostname.replace(/^www\./, "");
-  } catch {
-    return website;
-  }
 }

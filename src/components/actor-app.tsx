@@ -2,11 +2,11 @@ import type { CSSProperties, FormEvent, ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 
 import { BlueskyProfile } from "~/components/bluesky-profile";
+import { HauntSigil } from "~/components/haunt-sigil";
 import { IdentityCard } from "~/components/identity-card";
 import { MasonryGrid } from "~/components/masonry-grid";
 import { ProfileSections } from "~/components/profile-sections";
 import { resolveMiniDoc } from "~/lib/atproto/mini-doc";
-import { hashString } from "~/lib/did-random";
 import { getBlueskyProfile } from "~/lib/providers/bluesky";
 import { searchBlueskyActors } from "~/lib/providers/bluesky-search";
 import { getDidAtmosphere } from "~/lib/theme/did-atmosphere";
@@ -171,6 +171,11 @@ function Home() {
   const [query, setQuery] = useState("");
   const { actors, isSearching } = useActorSearch(query);
   const { isOpen, openPanel, searchAreaRef } = useSearchPanel();
+  const matchingActor = findMatchingActor(query, actors);
+  const sigilSeed = matchingActor?.did ?? (query.trim() || "haunt.at");
+  const sigilColor = matchingActor
+    ? getDidTheme(matchingActor.did).css.accent
+    : undefined;
 
   function visitPresence(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -190,7 +195,11 @@ function Home() {
           </h1>
 
           <div className="home-invocation-sigil">
-            <HauntSigil seed={query.trim() || "haunt.at"} />
+            <HauntSigil
+              className="home-sigil"
+              color={sigilColor}
+              seed={sigilSeed}
+            />
           </div>
 
           <div
@@ -267,43 +276,18 @@ function useSearchPanel() {
   return { isOpen, openPanel: () => setIsOpen(true), searchAreaRef };
 }
 
-type HauntSigilProps = {
-  seed: string;
-};
+function findMatchingActor(
+  query: string,
+  actors: BlueskyActorSearchResult[],
+): BlueskyActorSearchResult | undefined {
+  const identifier = query.trim().replace(/^@/, "").toLowerCase();
+  if (!identifier) return undefined;
 
-function HauntSigil({ seed }: HauntSigilProps) {
-  const pattern = getHauntSigilPattern(seed);
-
-  return (
-    <svg
-      className="home-sigil"
-      viewBox="0 0 120 120"
-      aria-hidden="true"
-      style={{ "--home-sigil-color": pattern.color } as CSSProperties}
-    >
-      <circle cx="60" cy="60" r="51" strokeDasharray={pattern.dashArray} />
-      <circle cx="60" cy="60" r="39" />
-      <g transform={`rotate(${pattern.rotation} 60 60)`}>
-        <path d="M60 19 91 37v36L60 101 29 73V37Z" />
-        <path d="M60 31v58M35 45l50 30M85 45 35 75" />
-        <circle className="home-sigil-node" cx="60" cy="60" r="8" />
-        <circle className="home-sigil-node" cx="60" cy="19" r="3" />
-        <circle className="home-sigil-node" cx="91" cy="73" r="3" />
-        <circle className="home-sigil-node" cx="29" cy="73" r="3" />
-      </g>
-    </svg>
+  return actors.find(
+    (actor) =>
+      actor.handle.toLowerCase() === identifier ||
+      actor.did.toLowerCase() === identifier,
   );
-}
-
-function getHauntSigilPattern(seed: string) {
-  const hash = hashString(seed);
-  const hue = 190 + (hash % 35);
-
-  return {
-    color: `hsl(${hue} 38% 76%)`,
-    dashArray: `${4 + (hash % 8)} ${3 + ((hash >>> 3) % 8)}`,
-    rotation: (hash >>> 6) % 60,
-  };
 }
 
 type SearchResultsProps = {
