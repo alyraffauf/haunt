@@ -32,7 +32,6 @@ const MAX_DOCUMENT_COUNT = 3;
 export async function getRecentStandardDocuments(
   pds: string,
   did: string,
-  handle: string | null,
 ): Promise<StandardDocument[]> {
   const documents = await listStandardDocuments(pds, did);
 
@@ -46,9 +45,7 @@ export async function getRecentStandardDocuments(
 
       return {
         ...document,
-        link:
-          getDocumentLink(document.path, publicationUrl) ??
-          getDocumentLink(document.path, handle),
+        link: getDocumentLink(document.path, publicationUrl),
       };
     }),
   );

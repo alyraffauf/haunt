@@ -35,7 +35,7 @@ export function ProfileSections({ did, handle, pds }: ProfileSectionsProps) {
       const [photos, scrobbles, documents, tangledRepos] = await Promise.all([
         getRecentGrainPhotos(pds, did),
         getRecentRocksky(pds, did),
-        getRecentStandardDocuments(pds, did, handle),
+        getRecentStandardDocuments(pds, did),
         getMostStarredTangledRepos(pds, did, handle),
       ]);
 
