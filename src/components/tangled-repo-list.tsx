@@ -1,46 +1,30 @@
 import type { ReactNode } from "react";
 
 import type { TangledRepo } from "~/lib/providers/tangled";
-import { ProfileSection } from "~/components/profile-section";
+import { ProfileArtifact } from "~/components/profile-artifact";
 
-type TangledRepoListProps = {
-  repos: TangledRepo[];
-};
-
-export function TangledRepoList({ repos }: TangledRepoListProps) {
+export function TangledRepoArtifact({ repo }: { repo: TangledRepo }) {
   return (
-    <ProfileSection
-      title="Code"
-      source={{ name: "tangled", href: "https://tangled.org" }}
-    >
-      <div>
-        {repos.map((repo) => (
-          <article
-            key={repo.repoDid}
-            className="profile-divider border-b py-3 last:border-b-0"
+    <ProfileArtifact source={{ name: "tangled", href: "https://tangled.org" }}>
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="profile-item-title">
+          <a
+            className="profile-link"
+            href={repo.link}
+            target="_blank"
+            rel="noreferrer"
           >
-            <div className="flex items-center justify-between gap-3">
-              <h3 className="profile-item-title">
-                <a
-                  className="profile-link"
-                  href={repo.link}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {repo.name}
-                </a>
-              </h3>
-              <span className="profile-metadata shrink-0 opacity-100">
-                ⭐ {repo.stars}
-              </span>
-            </div>
-            <p className="profile-secondary mt-1">
-              {renderMarkdownLinks(repo.description ?? "No description")}
-            </p>
-          </article>
-        ))}
+            {repo.name}
+          </a>
+        </h2>
+        <span className="profile-metadata shrink-0 opacity-100">
+          ⭐ {repo.stars}
+        </span>
       </div>
-    </ProfileSection>
+      <p className="profile-secondary mt-2">
+        {renderMarkdownLinks(repo.description ?? "No description")}
+      </p>
+    </ProfileArtifact>
   );
 }
 

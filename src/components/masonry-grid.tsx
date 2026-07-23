@@ -1,13 +1,16 @@
 import type { ReactNode } from "react";
 import { useLayoutEffect, useRef } from "react";
 
+import { hashString } from "~/lib/did-random";
+
 const MASONRY_MEDIA_QUERY = "(min-width: 40rem)";
 
 type MasonryGridProps = {
   children: ReactNode;
+  seed: string;
 };
 
-export function MasonryGrid({ children }: MasonryGridProps) {
+export function MasonryGrid({ children, seed }: MasonryGridProps) {
   const gridRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
@@ -31,7 +34,7 @@ export function MasonryGrid({ children }: MasonryGridProps) {
 
       if (!mediaQuery.matches) {
         gridElement.classList.remove("profile-grid-masonry");
-        cards.forEach(clearCardPlacement);
+        cards.forEach(clearCardLayout);
         return;
       }
 
@@ -48,13 +51,15 @@ export function MasonryGrid({ children }: MasonryGridProps) {
 
       const columnHeights = Array<number>(columnCount).fill(0);
 
-      cards.forEach((card) => {
+      cards.forEach((card, index) => {
         const columnIndex = getShortestColumn(columnHeights);
-        const rowSpan = getRowSpan(card, rowHeight, rowGap);
 
         card.style.gridColumnStart = String(columnIndex + 1);
+        const rowSpan = getRowSpan(card, rowHeight, rowGap);
+
         card.style.gridRowStart = String(columnHeights[columnIndex]! + 1);
         card.style.gridRowEnd = `span ${rowSpan}`;
+        setArtifactOffset(card, seed, index);
         columnHeights[columnIndex]! += rowSpan;
       });
     }
@@ -73,7 +78,7 @@ export function MasonryGrid({ children }: MasonryGridProps) {
       mutationObserver.disconnect();
       mediaQuery.removeEventListener("change", scheduleLayout);
     };
-  }, []);
+  }, [seed]);
 
   return (
     <div ref={gridRef} className="profile-grid mx-auto max-w-6xl">
@@ -82,10 +87,21 @@ export function MasonryGrid({ children }: MasonryGridProps) {
   );
 }
 
-function clearCardPlacement(card: HTMLElement) {
+function clearCardLayout(card: HTMLElement) {
   card.style.removeProperty("grid-column-start");
   card.style.removeProperty("grid-row-start");
   card.style.removeProperty("grid-row-end");
+  card.style.removeProperty("--artifact-offset-x");
+  card.style.removeProperty("--artifact-offset-y");
+}
+
+function setArtifactOffset(card: HTMLElement, seed: string, index: number) {
+  const hash = hashString(`${seed}:artifact:${index}`);
+  const horizontalOffset = (hash % 17) - 8;
+  const verticalOffset = ((hash >>> 5) % 13) - 6;
+
+  card.style.setProperty("--artifact-offset-x", `${horizontalOffset}px`);
+  card.style.setProperty("--artifact-offset-y", `${verticalOffset}px`);
 }
 
 function getColumnCount(gridTemplateColumns: string): number {

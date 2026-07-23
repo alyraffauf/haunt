@@ -6,6 +6,7 @@ import { HauntSigil } from "~/components/haunt-sigil";
 import { IdentityCard } from "~/components/identity-card";
 import { MasonryGrid } from "~/components/masonry-grid";
 import { ProfileSections } from "~/components/profile-sections";
+import { ProfileSigilArtifact } from "~/components/profile-sigil-artifact";
 import { resolveMiniDoc } from "~/lib/atproto/mini-doc";
 import { getBlueskyProfile } from "~/lib/providers/bluesky";
 import { searchBlueskyActors } from "~/lib/providers/bluesky-search";
@@ -123,16 +124,18 @@ export function ActorApp() {
     >
       <ProfileMasthead />
 
-      <MasonryGrid>
+      <MasonryGrid seed={identity.did}>
         {profile ? (
           <BlueskyProfile
-            did={identity.did}
             handle={identity.handle}
+            profileIdentifier={identity.handle ?? identity.did}
             profile={profile}
           />
         ) : (
           <IdentityCard identity={identity} />
         )}
+
+        <ProfileSigilArtifact did={identity.did} />
 
         <ProfileSections
           did={identity.did}

@@ -1,11 +1,10 @@
-import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 
-import { GrainPhotos } from "~/components/grain-photos";
-import { ProfileSection } from "~/components/profile-section";
-import { RockskyScrobbleList } from "~/components/rocksky-scrobble-list";
-import { StandardDocuments } from "~/components/standard-documents";
-import { TangledRepoList } from "~/components/tangled-repo-list";
+import { GrainPhotoArtifact } from "~/components/grain-photos";
+import { ProfileArtifact } from "~/components/profile-artifact";
+import { RockskyScrobble } from "~/components/rocksky-scrobble-list";
+import { StandardDocumentArtifact } from "~/components/standard-documents";
+import { TangledRepoArtifact } from "~/components/tangled-repo-list";
 import { getDidSectionOrder } from "~/lib/layout/did-section-order";
 import { getRecentGrainPhotos } from "~/lib/providers/grain-photo";
 import { getRecentRocksky } from "~/lib/providers/rocksky";
@@ -53,33 +52,41 @@ export function ProfileSections({ did, handle, pds }: ProfileSectionsProps) {
 
   if (!data) {
     return (
-      <ProfileSection title="Gathering signals">
+      <ProfileArtifact>
+        <h2 className="profile-item-title">Gathering signals</h2>
         <p className="text-sm">Searching the Atmosphere…</p>
-      </ProfileSection>
+      </ProfileArtifact>
     );
   }
 
-  const sections: ReactNode[] = [];
+  const artifacts = [
+    ...data.scrobbles.map((scrobble) => (
+      <RockskyScrobble
+        key={`rocksky-${scrobble.createdAt}-${scrobble.mbid}`}
+        album={scrobble.album}
+        albumArtUrl={scrobble.albumArtUrl}
+        artist={scrobble.artist}
+        createdAt={scrobble.createdAt}
+        spotifyLink={scrobble.spotifyLink}
+        title={scrobble.title}
+      />
+    )),
+    ...data.tangledRepos.map((repo) => (
+      <TangledRepoArtifact key={`tangled-${repo.repoDid}`} repo={repo} />
+    )),
+    ...data.documents.map((document) => (
+      <StandardDocumentArtifact
+        key={`standard-${document.path}-${document.publishedAt}`}
+        document={document}
+      />
+    )),
+    ...data.photos.map((photo) => (
+      <GrainPhotoArtifact
+        key={`grain-${photo.createdAt}-${photo.imageUrl}`}
+        photo={photo}
+      />
+    )),
+  ];
 
-  if (data.scrobbles.length > 0) {
-    sections.push(
-      <RockskyScrobbleList key="rocksky" scrobbles={data.scrobbles} />,
-    );
-  }
-
-  if (data.tangledRepos.length > 0) {
-    sections.push(<TangledRepoList key="tangled" repos={data.tangledRepos} />);
-  }
-
-  if (data.documents.length > 0) {
-    sections.push(
-      <StandardDocuments key="standard" documents={data.documents} />,
-    );
-  }
-
-  if (data.photos.length > 0) {
-    sections.push(<GrainPhotos key="grain" photos={data.photos} />);
-  }
-
-  return <>{getDidSectionOrder(did, sections)}</>;
+  return <>{getDidSectionOrder(did, artifacts)}</>;
 }

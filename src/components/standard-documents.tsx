@@ -1,51 +1,42 @@
 import type { StandardDocument } from "~/lib/providers/standard-site";
-import { ProfileSection } from "~/components/profile-section";
-type StandardDocumentsProps = {
-  documents: StandardDocument[];
-};
-
-export function StandardDocuments({ documents }: StandardDocumentsProps) {
+import { ProfileArtifact } from "~/components/profile-artifact";
+export function StandardDocumentArtifact({
+  document,
+}: {
+  document: StandardDocument;
+}) {
   return (
-    <ProfileSection
-      title="Writing"
+    <ProfileArtifact
       source={{ name: "standard.site", href: "https://standard.site" }}
     >
-      <div>
-        {documents.map((document) => (
-          <article
-            key={`${document.path}-${document.publishedAt}`}
-            className="profile-divider border-b py-3 last:border-b-0"
+      <h2 className="profile-item-title">
+        {document.link ? (
+          <a
+            className="profile-link"
+            href={document.link}
+            target="_blank"
+            rel="noreferrer"
           >
-            <h3 className="profile-item-title">
-              {document.link ? (
-                <a
-                  className="profile-link"
-                  href={document.link}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {document.title}
-                </a>
-              ) : (
-                document.title
-              )}
-            </h3>
+            {document.title}
+          </a>
+        ) : (
+          document.title
+        )}
+      </h2>
 
-            {document.description && (
-              <p className="profile-secondary mt-1">{document.description}</p>
-            )}
+      {document.description && (
+        <p className="profile-secondary mt-2">{document.description}</p>
+      )}
 
-            <div className="profile-metadata mt-2">
-              {document.publishedAt && (
-                <time dateTime={document.publishedAt}>
-                  {formatPublishedAt(document.publishedAt)}
-                </time>
-              )}
-            </div>
-          </article>
-        ))}
-      </div>
-    </ProfileSection>
+      {document.publishedAt && (
+        <time
+          className="profile-metadata mt-3 block"
+          dateTime={document.publishedAt}
+        >
+          {formatPublishedAt(document.publishedAt)}
+        </time>
+      )}
+    </ProfileArtifact>
   );
 }
 

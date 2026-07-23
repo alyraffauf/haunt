@@ -1,17 +1,19 @@
 import { useState } from "react";
 
-import { HauntSigil } from "~/components/haunt-sigil";
 import type { BlueskyProfile } from "~/lib/providers/bluesky";
 
 type BlueskyProfileProps = {
-  did: string;
   handle: string | null;
   profile: BlueskyProfile;
+  profileIdentifier: string;
 };
 
-export function BlueskyProfile({ did, handle, profile }: BlueskyProfileProps) {
+export function BlueskyProfile({
+  handle,
+  profile,
+  profileIdentifier,
+}: BlueskyProfileProps) {
   const [avatarUrl, setAvatarUrl] = useState(profile.avatarUrl);
-  const profileIdentifier = handle ?? did;
 
   return (
     <section className="bluesky-profile profile-card border">
@@ -44,12 +46,6 @@ export function BlueskyProfile({ did, handle, profile }: BlueskyProfileProps) {
             </p>
           )}
         </div>
-
-        <HauntSigil
-          className="profile-sigil"
-          color="var(--profile-accent)"
-          seed={did}
-        />
       </div>
 
       {profile.description && (

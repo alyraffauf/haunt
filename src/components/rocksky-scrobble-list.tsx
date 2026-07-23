@@ -1,37 +1,10 @@
 import type { RockskyScrobbleRecord } from "~/lib/providers/rocksky";
-import { ProfileSection } from "~/components/profile-section";
-
-type RockskyScrobbleListProps = {
-  scrobbles: RockskyScrobbleRecord[];
-};
+import { ProfileArtifact } from "~/components/profile-artifact";
 
 type RockskyScrobbleProps = Pick<
   RockskyScrobbleRecord,
   "album" | "albumArtUrl" | "artist" | "createdAt" | "spotifyLink" | "title"
 >;
-
-export function RockskyScrobbleList({ scrobbles }: RockskyScrobbleListProps) {
-  return (
-    <ProfileSection
-      title="Music"
-      source={{ name: "rocksky", href: "https://rocksky.app" }}
-    >
-      <div className="max-w-3xl">
-        {scrobbles.map((scrobble) => (
-          <RockskyScrobble
-            key={`${scrobble.createdAt}-${scrobble.mbid}`}
-            album={scrobble.album}
-            albumArtUrl={scrobble.albumArtUrl}
-            artist={scrobble.artist}
-            createdAt={scrobble.createdAt}
-            spotifyLink={scrobble.spotifyLink}
-            title={scrobble.title}
-          />
-        ))}
-      </div>
-    </ProfileSection>
-  );
-}
 
 function formatRelativeTime(createdAt: string): string {
   const elapsedMinutes = Math.round(
@@ -47,7 +20,7 @@ function formatRelativeTime(createdAt: string): string {
   return `${Math.round(elapsedHours / 24)} days ago`;
 }
 
-function RockskyScrobble({
+export function RockskyScrobble({
   title,
   artist,
   album,
@@ -56,34 +29,33 @@ function RockskyScrobble({
   albumArtUrl,
 }: RockskyScrobbleProps) {
   return (
-    <a
-      href={spotifyLink}
-      target="_blank"
-      rel="noreferrer"
-      className="profile-external-link profile-divider grid grid-cols-[3rem_1fr_auto] items-center gap-3 border-b py-2.5 last:border-b-0"
-    >
-      {albumArtUrl ? (
-        <img
-          src={albumArtUrl}
-          alt={`${album} album art`}
-          width={40}
-          height={40}
-          className="size-10 object-cover"
-        />
-      ) : (
-        <div className="size-10 border" />
-      )}
+    <ProfileArtifact source={{ name: "rocksky", href: "https://rocksky.app" }}>
+      <a
+        className="profile-external-link grid grid-cols-[3rem_1fr] items-center gap-3"
+        href={spotifyLink}
+        target="_blank"
+        rel="noreferrer"
+      >
+        {albumArtUrl ? (
+          <img
+            src={albumArtUrl}
+            alt={`${album} album art`}
+            width={48}
+            height={48}
+            className="size-12 object-cover"
+          />
+        ) : (
+          <div className="size-12 border" />
+        )}
 
-      <div className="min-w-0">
-        <h3 className="profile-item-title">{title}</h3>
-        <p className="profile-secondary mt-0.5">
-          {artist} · {album}
-        </p>
-      </div>
-
-      <span className="profile-metadata whitespace-nowrap">
-        {formatRelativeTime(createdAt)}
-      </span>
-    </a>
+        <div className="min-w-0">
+          <h2 className="profile-item-title">{title}</h2>
+          <p className="profile-secondary mt-0.5">
+            {artist} · {album}
+          </p>
+        </div>
+      </a>
+      <p className="profile-metadata mt-3">{formatRelativeTime(createdAt)}</p>
+    </ProfileArtifact>
   );
 }
