@@ -1,4 +1,4 @@
-const BLUESKY_APPVIEW_URL = "https://public.api.bsky.app";
+const TYPEAHEAD_URL = "https://typeahead.waow.tech";
 
 export type BlueskyActorSearchResult = {
   avatar?: string;
@@ -20,8 +20,8 @@ export async function searchBlueskyActors(
     limit: "8",
   });
   const response = await fetch(
-    `${BLUESKY_APPVIEW_URL}/xrpc/app.bsky.actor.searchActors?${params}`,
-    { signal },
+    `${TYPEAHEAD_URL}/xrpc/app.bsky.actor.searchActorsTypeahead?${params}`,
+    { signal, headers: { "X-Client": "haunt" } },
   );
 
   if (!response.ok) {
