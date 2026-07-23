@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+:root {
+  --home-background: #10090d;
+  --home-highlight: #d4ae6b;
+  --home-reading-offset: clamp(7rem, 20vh, 13rem);
+  --home-sigil-size: clamp(8rem, 18vw, 10rem);
+  --home-surface: #170e13;
+  --home-text: #e8ddcc;
+}
+
 body {
   background-color: #111;
   color: #eee;
@@ -18,21 +27,19 @@ body {
 
 .home-page,
 .state-page {
-  background-color: #10090d;
+  background-color: var(--home-background);
   background-image:
     radial-gradient(circle at 16% 12%, #2b111d 0, transparent 36rem),
     radial-gradient(circle at 82% 88%, #1e1016 0, transparent 32rem);
-  color: #e8ddcc;
+  color: var(--home-text);
 }
 
-.home-content {
-  padding-top: clamp(1.5rem, 4vw, 3rem);
-}
-
+.home-content,
 .state-content {
   padding-top: clamp(1.5rem, 4vw, 3rem);
 }
 
+.home-index-label,
 .state-masthead {
   color: color-mix(in srgb, currentColor 50%, transparent);
   font-size: 0.75rem;
@@ -42,29 +49,43 @@ body {
 
 .state-masthead:focus-visible,
 .state-action:focus-visible {
-  outline: 2px solid #d4ae6b;
+  outline: 2px solid var(--home-highlight);
   outline-offset: 3px;
 }
 
+.home-invocation,
 .state-reading {
   display: grid;
   justify-items: center;
-  margin: clamp(7rem, 20vh, 13rem) auto 0;
-  max-width: 25rem;
+  margin: var(--home-reading-offset) auto 0;
   text-align: center;
 }
 
-.state-reading .home-sigil {
-  height: clamp(8rem, 18vw, 10rem);
-  width: clamp(8rem, 18vw, 10rem);
+.state-reading {
+  max-width: 25rem;
 }
 
+.home-invocation-sigil .home-sigil,
+.state-reading .home-sigil {
+  height: var(--home-sigil-size);
+  width: var(--home-sigil-size);
+}
+
+.home-invocation-sigil p,
 .state-label {
   color: color-mix(in srgb, currentColor 48%, transparent);
   font-size: 0.6875rem;
   letter-spacing: 0.08em;
-  margin-top: 0.875rem;
   text-transform: uppercase;
+}
+
+.state-label {
+  margin-top: 0.875rem;
+}
+
+.home-invocation-sigil p {
+  line-height: 1.3;
+  white-space: nowrap;
 }
 
 .state-reading h1 {
@@ -81,25 +102,12 @@ body {
 }
 
 .state-action {
-  border-bottom: 1px solid color-mix(in srgb, #d4ae6b 70%, transparent);
-  color: #e8ddcc;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--home-highlight) 70%, transparent);
+  color: var(--home-text);
   font-size: 0.875rem;
   margin-top: 1.75rem;
   padding-bottom: 0.15rem;
-}
-
-.home-index-label {
-  color: color-mix(in srgb, currentColor 50%, transparent);
-  font-size: 0.75rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.home-invocation {
-  display: grid;
-  justify-items: center;
-  margin-top: clamp(7rem, 20vh, 13rem);
-  text-align: center;
 }
 
 .home-sigil {
@@ -120,20 +128,6 @@ body {
   display: grid;
   gap: 0.35rem;
   justify-items: center;
-}
-
-.home-invocation-sigil .home-sigil {
-  height: clamp(8rem, 18vw, 10rem);
-  width: clamp(8rem, 18vw, 10rem);
-}
-
-.home-invocation-sigil p {
-  color: color-mix(in srgb, currentColor 48%, transparent);
-  font-size: 0.6875rem;
-  letter-spacing: 0.08em;
-  line-height: 1.3;
-  text-transform: uppercase;
-  white-space: nowrap;
 }
 
 .home-search {
@@ -161,11 +155,11 @@ body {
 }
 
 .home-search:focus-within {
-  border-color: #d4ae6b;
+  border-color: var(--home-highlight);
 }
 
 .home-search-results {
-  background-color: #170e13;
+  background-color: var(--home-surface);
   border: 1px solid color-mix(in srgb, #a98345 48%, transparent);
   border-radius: 0.25rem;
   inset-inline: 0;
@@ -193,7 +187,7 @@ body {
 }
 
 .home-search-result:focus-visible {
-  outline: 2px solid #d4ae6b;
+  outline: 2px solid var(--home-highlight);
   outline-offset: -2px;
 }
 
@@ -256,7 +250,7 @@ body {
 }
 
 .home-how-it-works summary:focus-visible {
-  outline: 2px solid #d4ae6b;
+  outline: 2px solid var(--home-highlight);
   outline-offset: 3px;
 }
 
@@ -281,7 +275,7 @@ body {
 }
 
 .home-how-it-works-copy dt {
-  color: #d4ae6b;
+  color: var(--home-highlight);
   font-size: 0.8125rem;
   font-weight: 650;
 }
