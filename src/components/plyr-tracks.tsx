@@ -44,11 +44,13 @@ export function PlyrTrackArtifact({ track }: { track: PlyrTrack }) {
 }
 
 function formatDuration(duration: number): string | null {
-  if (!Number.isFinite(duration)) {
+  const parsedDuration = Number(duration);
+
+  if (!Number.isFinite(parsedDuration)) {
     return null;
   }
 
-  const totalSeconds = Math.max(0, Math.round(duration));
+  const totalSeconds = Math.max(0, Math.round(parsedDuration));
   const seconds = totalSeconds % 60;
   const minutes = Math.floor(totalSeconds / 60) % 60;
   const hours = Math.floor(totalSeconds / 3600);

@@ -1,6 +1,8 @@
+import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 
 import { GrainPhotoArtifact } from "~/components/grain-photos";
+import { MasonryGrid } from "~/components/masonry-grid";
 import { PlyrTrackArtifact } from "~/components/plyr-tracks";
 import { ProfileArtifact } from "~/components/profile-artifact";
 import { RockskyScrobble } from "~/components/rocksky-scrobble-list";
@@ -14,6 +16,7 @@ import { getMostStarredTangledRepos } from "~/lib/providers/tangled";
 import { getRecentStandardDocuments } from "~/lib/providers/standard-site";
 
 type ProfileSectionsProps = {
+  children: ReactNode;
   did: string;
   handle: string | null;
   pds: string;
@@ -27,7 +30,12 @@ type ProfileData = {
   tangledRepos: Awaited<ReturnType<typeof getMostStarredTangledRepos>>;
 };
 
-export function ProfileSections({ did, handle, pds }: ProfileSectionsProps) {
+export function ProfileSections({
+  children,
+  did,
+  handle,
+  pds,
+}: ProfileSectionsProps) {
   const [data, setData] = useState<ProfileData | null>(null);
 
   useEffect(() => {
@@ -57,10 +65,13 @@ export function ProfileSections({ did, handle, pds }: ProfileSectionsProps) {
 
   if (!data) {
     return (
-      <ProfileArtifact>
-        <h2 className="profile-item-title">Gathering signals</h2>
-        <p className="text-sm">Searching the Atmosphere…</p>
-      </ProfileArtifact>
+      <MasonryGrid>
+        {children}
+        <ProfileArtifact>
+          <h2 className="profile-item-title">Gathering signals</h2>
+          <p className="text-sm">Searching the Atmosphere…</p>
+        </ProfileArtifact>
+      </MasonryGrid>
     );
   }
 
@@ -99,5 +110,10 @@ export function ProfileSections({ did, handle, pds }: ProfileSectionsProps) {
     )),
   ];
 
-  return <>{getDidSectionOrder(did, artifacts)}</>;
+  return (
+    <MasonryGrid>
+      {children}
+      {getDidSectionOrder(did, artifacts)}
+    </MasonryGrid>
+  );
 }

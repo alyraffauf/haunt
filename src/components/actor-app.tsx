@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { BlueskyProfile } from "~/components/bluesky-profile";
 import { HauntSigil } from "~/components/haunt-sigil";
 import { IdentityCard } from "~/components/identity-card";
-import { MasonryGrid } from "~/components/masonry-grid";
 import { ProfileSections } from "~/components/profile-sections";
 import { ProfileSigilArtifact } from "~/components/profile-sigil-artifact";
 import { resolveMiniDoc } from "~/lib/atproto/mini-doc";
@@ -124,7 +123,11 @@ export function ActorApp() {
     >
       <ProfileMasthead />
 
-      <MasonryGrid seed={identity.did}>
+      <ProfileSections
+        did={identity.did}
+        handle={identity.handle}
+        pds={identity.pds}
+      >
         {profile ? (
           <BlueskyProfile handle={identity.handle} profile={profile} />
         ) : (
@@ -132,13 +135,7 @@ export function ActorApp() {
         )}
 
         <ProfileSigilArtifact did={identity.did} />
-
-        <ProfileSections
-          did={identity.did}
-          handle={identity.handle}
-          pds={identity.pds}
-        />
-      </MasonryGrid>
+      </ProfileSections>
     </main>
   );
 }

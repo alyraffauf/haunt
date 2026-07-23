@@ -290,20 +290,13 @@ body {
 
 .profile-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
-  align-items: start;
   gap: 1.5rem;
 }
 
-.profile-grid-masonry {
-  grid-auto-rows: 0.5rem;
-}
-
-.profile-grid-masonry > * {
-  transform: translate(
-    var(--artifact-offset-x, 0),
-    var(--artifact-offset-y, 0)
-  );
+.profile-grid-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .profile-card {
