@@ -16,6 +16,223 @@ body {
   background-size: 108% 108%;
 }
 
+.home-page {
+  background-color: #10090d;
+  background-image:
+    radial-gradient(circle at 16% 12%, #2b111d 0, transparent 36rem),
+    radial-gradient(circle at 82% 88%, #1e1016 0, transparent 32rem);
+  color: #e8ddcc;
+}
+
+.home-content {
+  padding-top: clamp(1.5rem, 4vw, 3rem);
+}
+
+.home-index-label {
+  color: color-mix(in srgb, currentColor 50%, transparent);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.home-invocation {
+  display: grid;
+  justify-items: center;
+  margin-top: clamp(7rem, 20vh, 13rem);
+  text-align: center;
+}
+
+.home-sigil {
+  color: var(--home-sigil-color, #9cc6d1);
+  fill: none;
+  height: 6.75rem;
+  opacity: 0.88;
+  stroke: currentColor;
+  stroke-width: 1.25;
+  width: 6.75rem;
+}
+
+.home-sigil-node {
+  fill: currentColor;
+}
+
+.home-invocation-sigil {
+  display: grid;
+  gap: 0.35rem;
+  justify-items: center;
+}
+
+.home-invocation-sigil .home-sigil {
+  height: clamp(8rem, 18vw, 10rem);
+  width: clamp(8rem, 18vw, 10rem);
+}
+
+.home-invocation-sigil p {
+  color: color-mix(in srgb, currentColor 48%, transparent);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.home-search {
+  border-bottom: 1px solid color-mix(in srgb, #a98345 66%, transparent);
+}
+
+.home-search-area {
+  margin-top: 2.25rem;
+  max-width: 25rem;
+  position: relative;
+  width: min(100%, 25rem);
+  z-index: 1;
+}
+
+.home-search-input {
+  background-color: transparent;
+  font-size: 1rem;
+  min-width: 0;
+  padding: 0.625rem 0 0.75rem;
+  width: 100%;
+}
+
+.home-search-input:focus {
+  outline: none;
+}
+
+.home-search:focus-within {
+  border-color: #d4ae6b;
+}
+
+.home-search-results {
+  background-color: #170e13;
+  border: 1px solid color-mix(in srgb, #a98345 48%, transparent);
+  border-radius: 0.25rem;
+  inset-inline: 0;
+  margin-top: 0.5rem;
+  max-height: 16rem;
+  overflow-y: auto;
+  position: absolute;
+  top: 100%;
+  box-shadow: 0 1rem 2rem rgb(0 0 0 / 0.24);
+}
+
+.home-search-result {
+  align-items: center;
+  display: grid;
+  gap: 0.625rem;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  padding: 0.5rem 0.625rem;
+  text-align: left;
+}
+
+.home-search-result:hover,
+.home-search-result:focus-visible {
+  background-color: color-mix(in srgb, #6e2435 30%, transparent);
+  outline: none;
+}
+
+.home-search-result:focus-visible {
+  outline: 2px solid #d4ae6b;
+  outline-offset: -2px;
+}
+
+.home-search-results li + li {
+  border-top: 1px solid color-mix(in srgb, #a98345 28%, transparent);
+}
+
+.home-search-avatar {
+  background-color: #2b111d;
+  border-radius: 9999px;
+  flex: none;
+  height: 2rem;
+  object-fit: cover;
+  width: 2rem;
+}
+
+.home-search-copy {
+  min-width: 0;
+}
+
+.home-search-name {
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+
+.home-search-handle,
+.home-search-status {
+  color: color-mix(in srgb, currentColor 55%, transparent);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.home-search-status {
+  inset-inline: 0;
+  margin-top: 0.5rem;
+  position: absolute;
+  top: 100%;
+}
+
+.home-how-it-works {
+  color: color-mix(in srgb, currentColor 56%, transparent);
+  margin: clamp(3rem, 8vh, 5rem) auto 0;
+  max-width: 28rem;
+  text-align: center;
+}
+
+.home-how-it-works summary {
+  cursor: pointer;
+  font-size: 0.8125rem;
+  list-style: none;
+  margin-inline: auto;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-underline-offset: 0.2em;
+  width: fit-content;
+}
+
+.home-how-it-works summary::-webkit-details-marker {
+  display: none;
+}
+
+.home-how-it-works summary:focus-visible {
+  outline: 2px solid #d4ae6b;
+  outline-offset: 3px;
+}
+
+.home-how-it-works-copy {
+  display: grid;
+  gap: 0.875rem;
+  line-height: 1.55;
+  margin-top: 1.25rem;
+  text-align: left;
+}
+
+.home-how-it-works-copy dl {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.home-how-it-works-copy dl div {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: 4.75rem 1fr;
+}
+
+.home-how-it-works-copy dt {
+  color: #d4ae6b;
+  font-size: 0.8125rem;
+  font-weight: 650;
+}
+
+@media (max-width: 24rem) {
+  .home-sigil {
+    height: 5.25rem;
+    width: 5.25rem;
+  }
+}
+
 .profile-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));

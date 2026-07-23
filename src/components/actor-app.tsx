@@ -1,5 +1,5 @@
-import type { CSSProperties } from "react";
-import { useEffect, useState } from "react";
+import type { CSSProperties, FormEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { BlueskyProfile } from "~/components/bluesky-profile";
 import { IdentityCard } from "~/components/identity-card";
@@ -7,11 +7,14 @@ import { MasonryGrid } from "~/components/masonry-grid";
 import { ProfileSection } from "~/components/profile-section";
 import { ProfileSections } from "~/components/profile-sections";
 import { resolveMiniDoc } from "~/lib/atproto/mini-doc";
+import { hashString } from "~/lib/did-random";
 import { getBlueskyProfile } from "~/lib/providers/bluesky";
+import { searchBlueskyActors } from "~/lib/providers/bluesky-search";
 import { getDidAtmosphere } from "~/lib/theme/did-atmosphere";
 import { getDidCardRadius } from "~/lib/theme/did-card-radius";
 import { getDidTheme } from "~/lib/theme/did-colors";
 import type { BlueskyProfile as BlueskyProfileData } from "~/lib/providers/bluesky";
+import type { BlueskyActorSearchResult } from "~/lib/providers/bluesky-search";
 import type { AtprotoMiniIdentity } from "~/lib/atproto/mini-doc";
 
 export function ActorApp() {
@@ -145,17 +148,258 @@ function getPathIdentifier(pathname: string | null): string | null {
 }
 
 function Home() {
+  const [query, setQuery] = useState("");
+  const { actors, isSearching } = useActorSearch(query);
+  const { isOpen, openPanel, searchAreaRef } = useSearchPanel();
+  const readingLabel = getSigilReadingLabel(query, actors);
+
+  function visitPresence(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const identifier = query.trim().replace(/^@/, "");
+    if (identifier) {
+      window.location.assign(`/${encodeURIComponent(identifier)}`);
+    }
+  }
+
   return (
-    <main className="min-h-screen p-8">
-      <div className="mx-auto flex max-w-2xl flex-col gap-4">
-        <h1 className="text-3xl font-bold">haunt</h1>
-        <p>Try visiting an atproto profile.</p>
-        <a className="w-fit border px-3 py-2" href="/atproto.com">
-          View an example profile →
-        </a>
+    <main className="home-page min-h-screen p-4 sm:p-8">
+      <div className="home-content mx-auto max-w-2xl">
+        <p className="home-index-label">haunt.at // an atmosphere compendium</p>
+
+        <section className="home-invocation" aria-labelledby="home-title">
+          <div className="home-invocation-sigil">
+            <HauntSigil seed={query.trim() || "haunt.at"} />
+            <p>{readingLabel}</p>
+          </div>
+
+          <h1 id="home-title" className="sr-only">
+            Haunt compendium
+          </h1>
+
+          <div
+            ref={searchAreaRef}
+            className="home-search-area"
+            aria-busy={isSearching}
+          >
+            <form onSubmit={visitPresence}>
+              <div className="home-search">
+                <input
+                  id="presence-query"
+                  className="home-search-input"
+                  value={query}
+                  onChange={(event) => {
+                    setQuery(event.target.value);
+                    openPanel();
+                  }}
+                  onFocus={openPanel}
+                  placeholder="summon a presence"
+                  autoComplete="off"
+                />
+              </div>
+            </form>
+
+            <SearchResults actors={actors} isOpen={isOpen} />
+          </div>
+        </section>
+
+        <details className="home-how-it-works">
+          <summary>how it works</summary>
+          <div className="home-how-it-works-copy">
+            <p>
+              Enter an AT Protocol handle. Haunt resolves it to a true name
+              (DID), then assembles its public traces from across the
+              Atmosphere.
+            </p>
+            <p>
+              A true name is stable. It determines a haunt&apos;s form: its
+              color, atmosphere, and geometry.
+            </p>
+          </div>
+        </details>
       </div>
     </main>
   );
+}
+
+function useSearchPanel() {
+  const searchAreaRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    function closePanel(event: PointerEvent) {
+      if (
+        event.target instanceof Node &&
+        !searchAreaRef.current?.contains(event.target)
+      ) {
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener("pointerdown", closePanel);
+    return () => document.removeEventListener("pointerdown", closePanel);
+  }, []);
+
+  return { isOpen, openPanel: () => setIsOpen(true), searchAreaRef };
+}
+
+function getSigilReadingLabel(
+  query: string,
+  actors: BlueskyActorSearchResult[],
+): string {
+  const identifier = query.trim().replace(/^@/, "");
+  const normalizedIdentifier = identifier.toLowerCase();
+  const matchingActor = actors.find(
+    (actor) =>
+      actor.handle.toLowerCase() === normalizedIdentifier ||
+      actor.did.toLowerCase() === normalizedIdentifier,
+  );
+
+  return matchingActor ? `reading: ${matchingActor.handle}` : "unresolved";
+}
+
+type HauntSigilProps = {
+  seed: string;
+};
+
+function HauntSigil({ seed }: HauntSigilProps) {
+  const pattern = getHauntSigilPattern(seed);
+
+  return (
+    <svg
+      className="home-sigil"
+      viewBox="0 0 120 120"
+      aria-hidden="true"
+      style={{ "--home-sigil-color": pattern.color } as CSSProperties}
+    >
+      <circle cx="60" cy="60" r="51" strokeDasharray={pattern.dashArray} />
+      <circle cx="60" cy="60" r="39" />
+      <g transform={`rotate(${pattern.rotation} 60 60)`}>
+        <path d="M60 19 91 37v36L60 101 29 73V37Z" />
+        <path d="M60 31v58M35 45l50 30M85 45 35 75" />
+        <circle className="home-sigil-node" cx="60" cy="60" r="8" />
+        <circle className="home-sigil-node" cx="60" cy="19" r="3" />
+        <circle className="home-sigil-node" cx="91" cy="73" r="3" />
+        <circle className="home-sigil-node" cx="29" cy="73" r="3" />
+      </g>
+    </svg>
+  );
+}
+
+function getHauntSigilPattern(seed: string) {
+  const hash = hashString(seed);
+  const hue = 190 + (hash % 35);
+
+  return {
+    color: `hsl(${hue} 38% 76%)`,
+    dashArray: `${4 + (hash % 8)} ${3 + ((hash >>> 3) % 8)}`,
+    rotation: (hash >>> 6) % 60,
+  };
+}
+
+type SearchResultsProps = {
+  actors: BlueskyActorSearchResult[];
+  isOpen: boolean;
+};
+
+type LoadActorsOptions = {
+  query: string;
+  setActors: (actors: BlueskyActorSearchResult[]) => void;
+  setIsSearching: (isSearching: boolean) => void;
+  signal: AbortSignal;
+};
+
+function SearchResults({ actors, isOpen }: SearchResultsProps) {
+  if (!isOpen) return null;
+
+  if (actors.length > 0) {
+    return (
+      <ul className="home-search-results" aria-label="Matching presences">
+        {actors.map((actor) => (
+          <li key={actor.did}>
+            <a
+              className="home-search-result"
+              href={`/${encodeURIComponent(actor.handle)}`}
+            >
+              {actor.avatar ? (
+                <img
+                  className="home-search-avatar"
+                  src={actor.avatar}
+                  alt=""
+                  width={32}
+                  height={32}
+                />
+              ) : (
+                <span className="home-search-avatar" aria-hidden="true" />
+              )}
+              <span className="home-search-copy">
+                <span className="home-search-name block truncate">
+                  {actor.displayName ?? actor.handle}
+                </span>
+                <span className="home-search-handle block truncate">
+                  @{actor.handle}
+                </span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
+  return null;
+}
+
+function useActorSearch(query: string) {
+  const [actors, setActors] = useState<BlueskyActorSearchResult[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+
+  useEffect(() => {
+    const normalizedQuery = query.trim();
+    if (normalizedQuery.length < 2) {
+      setActors([]);
+      setIsSearching(false);
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => {
+      void loadActors({
+        query: normalizedQuery,
+        signal: controller.signal,
+        setActors,
+        setIsSearching,
+      });
+    }, 300);
+
+    setIsSearching(true);
+    return () => {
+      controller.abort();
+      window.clearTimeout(timeoutId);
+    };
+  }, [query]);
+
+  return { actors, isSearching };
+}
+
+async function loadActors({
+  query,
+  signal,
+  setActors,
+  setIsSearching,
+}: LoadActorsOptions) {
+  try {
+    const actors = await searchBlueskyActors(query, signal);
+    if (!signal.aborted) {
+      setActors(actors);
+      setIsSearching(false);
+    }
+  } catch {
+    if (!signal.aborted) {
+      setActors([]);
+      setIsSearching(false);
+    }
+  }
 }
 
 function LoadingPage() {
