@@ -29,7 +29,7 @@ export function RockskyScrobble({
   albumArtUrl,
 }: RockskyScrobbleProps) {
   return (
-    <ProfileArtifact source={{ name: "rocksky", href: "https://rocksky.app" }}>
+    <ProfileArtifact>
       <a
         className="profile-external-link grid grid-cols-[3rem_1fr] items-center gap-3"
         href={spotifyLink}

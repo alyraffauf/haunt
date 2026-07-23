@@ -126,11 +126,7 @@ export function ActorApp() {
 
       <MasonryGrid seed={identity.did}>
         {profile ? (
-          <BlueskyProfile
-            handle={identity.handle}
-            profileIdentifier={identity.handle ?? identity.did}
-            profile={profile}
-          />
+          <BlueskyProfile handle={identity.handle} profile={profile} />
         ) : (
           <IdentityCard identity={identity} />
         )}

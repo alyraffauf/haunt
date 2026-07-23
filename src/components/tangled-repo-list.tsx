@@ -5,7 +5,7 @@ import { ProfileArtifact } from "~/components/profile-artifact";
 
 export function TangledRepoArtifact({ repo }: { repo: TangledRepo }) {
   return (
-    <ProfileArtifact source={{ name: "tangled", href: "https://tangled.org" }}>
+    <ProfileArtifact>
       <div className="flex items-center justify-between gap-3">
         <h2 className="profile-item-title">
           <a

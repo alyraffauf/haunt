@@ -6,9 +6,7 @@ export function StandardDocumentArtifact({
   document: StandardDocument;
 }) {
   return (
-    <ProfileArtifact
-      source={{ name: "standard.site", href: "https://standard.site" }}
-    >
+    <ProfileArtifact>
       <h2 className="profile-item-title">
         {document.link ? (
           <a

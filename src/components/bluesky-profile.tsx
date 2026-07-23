@@ -5,14 +5,9 @@ import type { BlueskyProfile } from "~/lib/providers/bluesky";
 type BlueskyProfileProps = {
   handle: string | null;
   profile: BlueskyProfile;
-  profileIdentifier: string;
 };
 
-export function BlueskyProfile({
-  handle,
-  profile,
-  profileIdentifier,
-}: BlueskyProfileProps) {
+export function BlueskyProfile({ handle, profile }: BlueskyProfileProps) {
   const [avatarUrl, setAvatarUrl] = useState(profile.avatarUrl);
 
   return (
@@ -53,17 +48,6 @@ export function BlueskyProfile({
           {profile.description}
         </p>
       )}
-
-      <footer className="mt-5 flex justify-end">
-        <a
-          className="profile-source-link"
-          href={`https://bsky.app/profile/${profileIdentifier}`}
-          target="_blank"
-          rel="noreferrer"
-        >
-          bsky
-        </a>
-      </footer>
     </section>
   );
 }
