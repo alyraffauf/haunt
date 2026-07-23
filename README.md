@@ -1,8 +1,6 @@
 # haunt
 
-A haunted view of an atproto presence. Visit `/<handle>` or `/<did>` to see the records that a person has published across the Atmosphere.
-
-The app resolves identities through Slingshot, then fetches records directly from the person’s PDS in the browser.
+Haunt collects the public AT Protocol records behind a handle and lays them out as a page. The account's DID determines the page's colors, card order, geometry, and sigil.
 
 ## Development
 
@@ -11,12 +9,6 @@ bun install
 bun run dev
 ```
 
-Useful checks:
+Run `bun run check` and `bun run build` before committing.
 
-```sh
-bun run typecheck
-bun run format:check
-bun run build
-```
-
-The production site is written to `dist/`. Static hosts must serve `index.html` for unknown paths; `public/_redirects` configures this for Cloudflare Pages and Netlify.
+Static hosts must serve `index.html` for unknown paths.
