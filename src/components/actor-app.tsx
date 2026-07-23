@@ -121,6 +121,8 @@ export function ActorApp() {
         } as CSSProperties
       }
     >
+      <ProfileMasthead />
+
       <MasonryGrid>
         {profile ? (
           <BlueskyProfile
@@ -169,7 +171,6 @@ function Home() {
   const [query, setQuery] = useState("");
   const { actors, isSearching } = useActorSearch(query);
   const { isOpen, openPanel, searchAreaRef } = useSearchPanel();
-  const readingLabel = getSigilReadingLabel(query, actors);
 
   function visitPresence(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -182,18 +183,15 @@ function Home() {
 
   return (
     <main className="home-page min-h-screen p-4 sm:p-8">
-      <div className="home-content mx-auto max-w-2xl">
-        <p className="home-index-label">haunt.at // an atmosphere compendium</p>
-
+      <div className="mx-auto max-w-2xl">
         <section className="home-invocation" aria-labelledby="home-title">
-          <div className="home-invocation-sigil">
-            <HauntSigil seed={query.trim() || "haunt.at"} />
-            <p>{readingLabel}</p>
-          </div>
-
           <h1 id="home-title" className="sr-only">
             Haunt compendium
           </h1>
+
+          <div className="home-invocation-sigil">
+            <HauntSigil seed={query.trim() || "haunt.at"} />
+          </div>
 
           <div
             ref={searchAreaRef}
@@ -240,6 +238,14 @@ function Home() {
   );
 }
 
+function ProfileMasthead() {
+  return (
+    <a className="profile-home-link mx-auto block max-w-6xl" href="/">
+      haunt.at
+    </a>
+  );
+}
+
 function useSearchPanel() {
   const searchAreaRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -259,21 +265,6 @@ function useSearchPanel() {
   }, []);
 
   return { isOpen, openPanel: () => setIsOpen(true), searchAreaRef };
-}
-
-function getSigilReadingLabel(
-  query: string,
-  actors: BlueskyActorSearchResult[],
-): string {
-  const identifier = query.trim().replace(/^@/, "");
-  const normalizedIdentifier = identifier.toLowerCase();
-  const matchingActor = actors.find(
-    (actor) =>
-      actor.handle.toLowerCase() === normalizedIdentifier ||
-      actor.did.toLowerCase() === normalizedIdentifier,
-  );
-
-  return matchingActor ? `reading: ${matchingActor.handle}` : "unresolved";
 }
 
 type HauntSigilProps = {
