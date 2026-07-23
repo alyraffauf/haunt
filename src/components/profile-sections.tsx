@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 
 import { GrainPhotoArtifact } from "~/components/grain-photos";
+import { PlyrTrackArtifact } from "~/components/plyr-tracks";
 import { ProfileArtifact } from "~/components/profile-artifact";
 import { RockskyScrobble } from "~/components/rocksky-scrobble-list";
 import { StandardDocumentArtifact } from "~/components/standard-documents";
 import { TangledRepoArtifact } from "~/components/tangled-repo-list";
 import { getDidSectionOrder } from "~/lib/layout/did-section-order";
 import { getRecentGrainPhotos } from "~/lib/providers/grain-photo";
+import { getRecentPlyrTracks } from "~/lib/providers/plyr";
 import { getRecentRocksky } from "~/lib/providers/rocksky";
 import { getMostStarredTangledRepos } from "~/lib/providers/tangled";
 import { getRecentStandardDocuments } from "~/lib/providers/standard-site";
@@ -19,6 +21,7 @@ type ProfileSectionsProps = {
 
 type ProfileData = {
   photos: Awaited<ReturnType<typeof getRecentGrainPhotos>>;
+  plyrTracks: Awaited<ReturnType<typeof getRecentPlyrTracks>>;
   scrobbles: Awaited<ReturnType<typeof getRecentRocksky>>;
   documents: Awaited<ReturnType<typeof getRecentStandardDocuments>>;
   tangledRepos: Awaited<ReturnType<typeof getMostStarredTangledRepos>>;
@@ -31,15 +34,17 @@ export function ProfileSections({ did, handle, pds }: ProfileSectionsProps) {
     let isCurrent = true;
 
     async function loadProfileData() {
-      const [photos, scrobbles, documents, tangledRepos] = await Promise.all([
-        getRecentGrainPhotos(pds, did),
-        getRecentRocksky(pds, did),
-        getRecentStandardDocuments(pds, did),
-        getMostStarredTangledRepos(pds, did, handle),
-      ]);
+      const [photos, plyrTracks, scrobbles, documents, tangledRepos] =
+        await Promise.all([
+          getRecentGrainPhotos(pds, did),
+          getRecentPlyrTracks(pds, did),
+          getRecentRocksky(pds, did),
+          getRecentStandardDocuments(pds, did),
+          getMostStarredTangledRepos(pds, did, handle),
+        ]);
 
       if (isCurrent) {
-        setData({ photos, scrobbles, documents, tangledRepos });
+        setData({ photos, plyrTracks, scrobbles, documents, tangledRepos });
       }
     }
 
@@ -60,6 +65,12 @@ export function ProfileSections({ did, handle, pds }: ProfileSectionsProps) {
   }
 
   const artifacts = [
+    ...data.plyrTracks.map((track) => (
+      <PlyrTrackArtifact
+        key={`plyr-${track.createdAt}-${track.audioUrl}`}
+        track={track}
+      />
+    )),
     ...data.scrobbles.map((scrobble) => (
       <RockskyScrobble
         key={`rocksky-${scrobble.createdAt}-${scrobble.mbid}`}
