@@ -1,0 +1,44 @@
+when:
+  - event: ['push']
+    branch: ['main']
+  - event: ['manual']
+
+engine: 'nixery'
+
+dependencies:
+  nixpkgs:
+    - nodejs
+    - coreutils
+    - curl
+    - glibc
+  github:NixOS/nixpkgs/nixpkgs-unstable:
+    - bun
+
+environment:
+  SITE_PATH: 'dist'
+  SITE_NAME: 'haunt'
+  WISP_HANDLE: 'aly.codes'
+
+steps:
+  - name: build site
+    command: |
+      export PATH="$HOME/.nix-profile/bin:$PATH"
+
+      # you may need to regenerate the lockfile due to nixery being weird
+      # rm package-lock.json bun.lock
+      bun install
+
+      bun run build
+
+  - name: deploy to wisp
+    command: |
+      # Download Wisp CLI
+      curl https://sites.wisp.place/nekomimi.pet/wisp-cli-binaries/wisp-cli-x86_64-linux -o wisp-cli
+      chmod +x wisp-cli
+
+      # Deploy to Wisp
+      ./wisp-cli \
+        "$WISP_HANDLE" \
+        --path "$SITE_PATH" \
+        --site "$SITE_NAME" \
+        --password "$WISP_APP_PASSWORD"
