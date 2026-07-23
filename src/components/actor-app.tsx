@@ -397,6 +397,7 @@ type StatePageProps = {
   label: string;
   seed: string;
   title: string;
+  variant: "error" | "loading" | "not-found";
 };
 
 function StatePage({
@@ -404,16 +405,24 @@ function StatePage({
   title,
   description,
   seed,
+  variant,
   children,
 }: StatePageProps) {
   return (
-    <main className="state-page min-h-screen p-4 sm:p-8">
+    <main
+      className={`state-page state-page--${variant} min-h-screen p-4 sm:p-8`}
+      aria-busy={variant === "loading"}
+    >
       <div className="state-content mx-auto max-w-2xl">
         <a className="state-masthead" href="/">
           haunt.at
         </a>
 
-        <section className="state-reading" aria-labelledby="state-title">
+        <section
+          className="state-reading"
+          aria-labelledby="state-title"
+          role={variant === "loading" ? "status" : undefined}
+        >
           <HauntSigil seed={seed} />
           <p className="state-label">{label}</p>
           <h1 id="state-title">{title}</h1>
@@ -428,10 +437,11 @@ function StatePage({
 function LoadingPage({ seed }: { seed: string }) {
   return (
     <StatePage
-      label="resolving"
-      title="Finding a presence"
-      description="Following the public record to its source."
+      label="summoning"
+      title="Summoning presence"
+      description="Resolving its true name."
       seed={seed}
+      variant="loading"
     />
   );
 }
@@ -439,14 +449,13 @@ function LoadingPage({ seed }: { seed: string }) {
 function ErrorPage({ message, seed }: { message: string; seed: string }) {
   return (
     <StatePage
-      label="unresolved"
-      title="No presence found"
+      label="summoning failed"
+      title="No presence answered"
       description={message}
       seed={seed}
+      variant="error"
     >
-      <a className="state-action" href="/">
-        return to haunt
-      </a>
+      <StateReturnLink />
     </StatePage>
   );
 }
@@ -454,14 +463,21 @@ function ErrorPage({ message, seed }: { message: string; seed: string }) {
 function NotFoundPage() {
   return (
     <StatePage
-      label="lost path"
-      title="This path leads nowhere"
-      description="Haunt pages begin with a handle or DID."
+      label="path unresolved"
+      title="Nothing answers here"
+      description="A haunt begins with a handle or DID."
       seed="lost-path"
+      variant="not-found"
     >
-      <a className="state-action" href="/">
-        return to haunt
-      </a>
+      <StateReturnLink />
     </StatePage>
+  );
+}
+
+function StateReturnLink() {
+  return (
+    <a className="state-action" href="/">
+      return to compendium
+    </a>
   );
 }

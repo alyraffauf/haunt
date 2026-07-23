@@ -75,6 +75,15 @@ body {
   max-width: 25rem;
 }
 
+.state-page--loading .state-reading {
+  animation: state-reading-enter 240ms ease-out 180ms forwards;
+  opacity: 0;
+}
+
+.state-page--loading .haunt-sigil {
+  animation: state-sigil-summon 2.4s ease-in-out 420ms infinite;
+}
+
 .home-sigil,
 .state-reading .haunt-sigil {
   height: var(--home-sigil-size);
@@ -109,6 +118,19 @@ body {
   font-size: 0.875rem;
   margin-top: 1.75rem;
   padding-bottom: 0.15rem;
+}
+
+@keyframes state-reading-enter {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes state-sigil-summon {
+  50% {
+    opacity: 0.58;
+    transform: scale(0.985);
+  }
 }
 
 .haunt-sigil {
@@ -389,5 +411,15 @@ body {
 @media (prefers-reduced-motion: no-preference) {
   .profile-page {
     animation: atmosphere-drift 28s ease-in-out infinite alternate;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .state-page--loading .state-reading {
+    animation-duration: 1ms;
+  }
+
+  .state-page--loading .haunt-sigil {
+    animation: none;
   }
 }
