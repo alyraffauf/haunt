@@ -3,12 +3,14 @@ import { useState } from "react";
 import type { BlueskyProfile } from "~/lib/providers/bluesky";
 
 type BlueskyProfileProps = {
+  did: string;
   handle: string | null;
   profile: BlueskyProfile;
 };
 
-export function BlueskyProfile({ handle, profile }: BlueskyProfileProps) {
+export function BlueskyProfile({ did, handle, profile }: BlueskyProfileProps) {
   const [avatarUrl, setAvatarUrl] = useState(profile.avatarUrl);
+  const profileIdentifier = handle ?? did;
 
   return (
     <section className="bluesky-profile profile-card border">
@@ -63,6 +65,17 @@ export function BlueskyProfile({ handle, profile }: BlueskyProfileProps) {
           </p>
         )} */}
       </div>
+
+      <footer className="profile-divider mt-4 flex justify-end border-t pt-3">
+        <a
+          className="profile-source-link"
+          href={`https://bsky.app/profile/${profileIdentifier}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          bsky
+        </a>
+      </footer>
     </section>
   );
 }

@@ -6,7 +6,10 @@ type StandardDocumentsProps = {
 
 export function StandardDocuments({ documents }: StandardDocumentsProps) {
   return (
-    <ProfileSection title="Writing">
+    <ProfileSection
+      title="Writing"
+      source={{ name: "standard.site", href: "https://standard.site" }}
+    >
       <div>
         {documents.map((document) => (
           <article

@@ -106,7 +106,11 @@ export function ActorApp() {
     >
       <MasonryGrid>
         {profile ? (
-          <BlueskyProfile handle={identity.handle} profile={profile} />
+          <BlueskyProfile
+            did={identity.did}
+            handle={identity.handle}
+            profile={profile}
+          />
         ) : (
           <IdentityCard identity={identity} />
         )}

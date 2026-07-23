@@ -12,7 +12,10 @@ type RockskyScrobbleProps = Pick<
 
 export function RockskyScrobbleList({ scrobbles }: RockskyScrobbleListProps) {
   return (
-    <ProfileSection title="Music">
+    <ProfileSection
+      title="Music"
+      source={{ name: "rocksky", href: "https://rocksky.app" }}
+    >
       <div className="max-w-3xl">
         {scrobbles.map((scrobble) => (
           <RockskyScrobble
@@ -57,7 +60,7 @@ function RockskyScrobble({
       href={spotifyLink}
       target="_blank"
       rel="noreferrer"
-      className="profile-external-link profile-divider grid grid-cols-[3rem_1fr_auto] items-center gap-3 border-b py-2.5"
+      className="profile-external-link profile-divider grid grid-cols-[3rem_1fr_auto] items-center gap-3 border-b py-2.5 last:border-b-0"
     >
       {albumArtUrl ? (
         <img

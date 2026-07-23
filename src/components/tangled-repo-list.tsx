@@ -9,7 +9,10 @@ type TangledRepoListProps = {
 
 export function TangledRepoList({ repos }: TangledRepoListProps) {
   return (
-    <ProfileSection title="Code">
+    <ProfileSection
+      title="Code"
+      source={{ name: "tangled", href: "https://tangled.org" }}
+    >
       <div>
         {repos.map((repo) => (
           <article

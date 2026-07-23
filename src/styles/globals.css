@@ -79,6 +79,33 @@ body {
   line-height: 1.05;
 }
 
+.profile-section-title {
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1.3;
+}
+
+.profile-source-link {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  opacity: 0.48;
+  text-decoration-color: transparent;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+.profile-source-link:hover,
+.profile-source-link:focus-visible {
+  opacity: 0.82;
+  text-decoration-color: currentColor;
+}
+
+.profile-source-link:focus-visible {
+  outline: 2px solid var(--profile-accent);
+  outline-offset: 3px;
+}
+
 .profile-item-title {
   font-size: 0.9375rem;
   font-weight: 650;

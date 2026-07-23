@@ -6,7 +6,10 @@ type GrainPhotosProps = {
 
 export function GrainPhotos({ photos }: GrainPhotosProps) {
   return (
-    <ProfileSection title="Photos">
+    <ProfileSection
+      title="Photos"
+      source={{ name: "grain", href: "https://grain.social" }}
+    >
       <div className="grid gap-3 md:grid-cols-3">
         {photos.map((photo) =>
           photo.postUrl ? (
